@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item android:title="Funcionários"
+            android:id="@+id/menu_listaFuncionarios"/>
+        <item android:title="Projetos"
+            android:id="@+id/menu_lista_projetos"/>
+        <item android:title="Cadastro Funcionário"
+            android:id="@+id/menu_cadastroFuncionario"/>
+
+        <!--item android:title="Teste"
+            android:id="@+id/menu_teste"/-->
+
+    </group>
+
+    <!--item android:title="SUPORTE">
+        <menu>
+            <item android:title="ADM"
+                android:id="@+id/menu_suporte_adm"/>
+        </menu>
+    </item-->
+
+
+
+
+</menu>

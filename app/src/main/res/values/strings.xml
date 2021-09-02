@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AprotADM</string>
+    <string name="open_drawer">abrir</string>
+    <string name="close_drawer">fechar</string>
+</resources>
