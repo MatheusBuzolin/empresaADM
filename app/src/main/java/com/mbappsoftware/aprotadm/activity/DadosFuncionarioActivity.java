@@ -17,6 +17,7 @@ public class DadosFuncionarioActivity extends AppCompatActivity {
 
     private Usuario funcionario;
     private TextView nomeFuncionario;
+    private String txNomeFuncionario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,10 @@ public class DadosFuncionarioActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if ((extras != null) && (getIntent().getExtras().containsKey("funcionarioList"))) {
 
+            if (getIntent().getExtras().containsKey("pesq_txNomeFunc")){
+                txNomeFuncionario = extras.getString("pesq_txNomeFunc");
+            }
+
             funcionario = (Usuario) extras.getSerializable("funcionarioList");
             nomeFuncionario.setText(funcionario.getNome());
             toolbar.setTitle("Funcionario: " + funcionario.getNome());
@@ -43,9 +48,26 @@ public class DadosFuncionarioActivity extends AppCompatActivity {
     public void comprovante(View view) {
         if (funcionario != null) {
             Intent i = new Intent(DadosFuncionarioActivity.this, ListaComprovanteActivity.class);
+            if (txNomeFuncionario != null){
+                i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
+            }
             i.putExtra("funcionarioList", funcionario);
             startActivity(i);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (txNomeFuncionario != null) {
+            Intent i = new Intent(DadosFuncionarioActivity.this, ListaFuncionarioActivity.class);
+            i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
+            startActivity(i);
+
+        }else{
+            startActivity(new Intent(DadosFuncionarioActivity.this, ListaFuncionarioActivity.class));
+        }
+        return false;
+
     }
 
 

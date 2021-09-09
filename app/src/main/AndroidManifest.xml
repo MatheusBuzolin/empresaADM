@@ -11,23 +11,26 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_logo"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
-        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.ListaProjComproActivity"></activity>
+        <activity
+            android:name=".activity.PesquisaActivity"
+            android:parentActivityName=".activity.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ZoomImagemActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ComprovanteActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListaComprovanteActivity"
-            android:parentActivityName=".activity.DadosFuncionarioActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.DadosProjetoActivity"
-            android:parentActivityName=".activity.ListaProjetoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListaProjetoActivity"
@@ -35,7 +38,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.DadosFuncionarioActivity"
-            android:parentActivityName=".activity.ListaFuncionarioActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CadastroFuncionarioActivity"
@@ -43,7 +45,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListaFuncionarioActivity"
-            android:parentActivityName=".activity.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AddProjetoActivity"

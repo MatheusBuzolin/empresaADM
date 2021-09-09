@@ -34,6 +34,7 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
     private List<Usuario> funcionarioList = new ArrayList<>();
     private ListaFunciAdapter adapter;
     private RecyclerView recyclerFuncionario;
+    private String nomeFuncionario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,14 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
 
         db = ConfiguracaoFirebase.getfirebaseFirestore();
 
+        Bundle extras = getIntent().getExtras();
+        if ((extras != null) && (getIntent().getExtras().containsKey("pesq_txNomeFunc"))) {
+
+            //funcionario = (Usuario) extras.getSerializable("funcionarioList");
+            nomeFuncionario = extras.getString("pesq_txNomeFunc");
+            Log.i("sdfdsfd", "HOME 1  ListaFuncionarioActivity > " + nomeFuncionario );
+        }
+
         iniciaComponentes();
 
     }
@@ -49,8 +58,42 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        recFuncionarios();
 
+        if (nomeFuncionario != null){
+            recFuncionarioPesquisa();
+        }else {
+            recFuncionarios();
+        }
+
+    }
+
+    private void recFuncionarioPesquisa() {
+
+        db.collection("funcionario")
+                .orderBy("nomePesquisa")
+                .startAt(nomeFuncionario)
+                .endAt(nomeFuncionario + "\uf8ff")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        funcionarioList.clear();
+                        if (!queryDocumentSnapshots.isEmpty()) {
+
+                            List<DocumentSnapshot> listaDocumento = queryDocumentSnapshots.getDocuments();
+
+                            for (DocumentSnapshot d : listaDocumento) {
+                                Usuario funcionarioRec = d.toObject(Usuario.class);
+
+                                funcionarioList.add(funcionarioRec);
+                            }
+                            //Collections.reverse(carroList);
+                            adapter.notifyDataSetChanged();
+
+                        }
+
+                    }
+                });
     }
 
     private void recFuncionarios() {
@@ -80,6 +123,18 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (nomeFuncionario != null) {
+            startActivity(new Intent(ListaFuncionarioActivity.this, PesquisaActivity.class));
+
+        }else{
+            startActivity(new Intent(ListaFuncionarioActivity.this, HomeActivity.class));
+        }
+        return false;
+
+    }
+
     private void iniciaComponentes() {
         //configurando toobar
         Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
@@ -106,6 +161,9 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
 
                         Intent i = new Intent(ListaFuncionarioActivity.this, DadosFuncionarioActivity.class);
                         i.putExtra("funcionarioList", funcionario);
+                        if (nomeFuncionario != null) {
+                            i.putExtra("pesq_txNomeFunc", nomeFuncionario);
+                        }
                         startActivity(i);
                     }
 

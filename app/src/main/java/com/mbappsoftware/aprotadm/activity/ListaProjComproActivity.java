@@ -14,44 +14,40 @@ import android.widget.AdapterView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mbappsoftware.aprotadm.R;
 import com.mbappsoftware.aprotadm.adapter.ListaComprovanteAdapter;
+import com.mbappsoftware.aprotadm.adapter.ListaProjComproAdapter;
+import com.mbappsoftware.aprotadm.adapter.ListaProjetosAdapter;
 import com.mbappsoftware.aprotadm.config.ConfiguracaoFirebase;
 import com.mbappsoftware.aprotadm.helper.RecyclerItemClickListener;
-import com.mbappsoftware.aprotadm.helper.UsuarioFirebase;
 import com.mbappsoftware.aprotadm.model.Comprovante;
-import com.mbappsoftware.aprotadm.model.Usuario;
+import com.mbappsoftware.aprotadm.model.Projeto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListaComprovanteActivity extends AppCompatActivity {
+public class ListaProjComproActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private List<Comprovante> comprovanteList = new ArrayList<>();
-    private ListaComprovanteAdapter adapter;
+    private ListaProjComproAdapter adapter;
     private RecyclerView recyclerComprovante;
-    private Usuario funcionario;
-    private String txNomeFuncionario;
-
+    private String nomeProjeto;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_comprovante);
+        setContentView(R.layout.activity_lista_proj_compro);
 
         db = ConfiguracaoFirebase.getfirebaseFirestore();
 
         Bundle extras = getIntent().getExtras();
-        if ((extras != null) && (getIntent().getExtras().containsKey("funcionarioList"))) {
+        if ((extras != null) && (getIntent().getExtras().containsKey("pesq_txNomeProjeto"))) {
 
-            if (getIntent().getExtras().containsKey("pesq_txNomeFunc")){
-                txNomeFuncionario = extras.getString("pesq_txNomeFunc");
-            }
-            funcionario = (Usuario) extras.getSerializable("funcionarioList");
-
-            Log.i("sdfdsfd", "HOME 1 > " + funcionario.getUid() + " > " + funcionario.getNome());
+            //funcionario = (Usuario) extras.getSerializable("funcionarioList");
+            nomeProjeto = extras.getString("pesq_txNomeProjeto");
+            Log.i("sdfdsfd", "HOME 1  ListaFuncionarioActivity > " + nomeProjeto );
         }
 
         iniciaComponentes();
@@ -60,24 +56,24 @@ public class ListaComprovanteActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        recProjetos();
-
+        recProjetoPesquisa();
     }
 
     private void iniciaComponentes() {
+
         //configurando toobar
         Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
-        toolbar.setTitle("LISTA DE PROJETOS");
+        toolbar.setTitle("COMPROVANTES");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerComprovante = findViewById(R.id.listaComprovante_recycler);
+        recyclerComprovante = findViewById(R.id.listaProjCompro_recycler);
         //tvResultado = findViewById(R.id.requisicoes_tv_aguardandoReq);
 
         //configurar recyclerview
         recyclerComprovante.setLayoutManager(new LinearLayoutManager(this));
         recyclerComprovante.setHasFixedSize(true);
-        adapter = new ListaComprovanteAdapter(comprovanteList);
+        adapter = new ListaProjComproAdapter(comprovanteList);
         recyclerComprovante.setAdapter(adapter);
 
         recyclerComprovante.addOnItemTouchListener(new RecyclerItemClickListener(
@@ -88,13 +84,13 @@ public class ListaComprovanteActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         Comprovante comprovante = comprovanteList.get(position);
 
-                        Intent i = new Intent(ListaComprovanteActivity.this, ComprovanteActivity.class);
+                        /*Intent i = new Intent(ListaComprovanteActivity.this, ComprovanteActivity.class);
                         if (txNomeFuncionario != null){
                             i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
                         }
                         i.putExtra("comprovanteList", comprovante);
                         i.putExtra("funcionarioList", funcionario);
-                        startActivity(i);
+                        startActivity(i);*/
                     }
 
                     @Override
@@ -110,11 +106,12 @@ public class ListaComprovanteActivity extends AppCompatActivity {
         ));
     }
 
-    private void recProjetos() {
+    private void recProjetoPesquisa() {
 
         db.collection("comprovante")
-                .whereEqualTo("uidFuncionario", funcionario.getUid())
-                .orderBy("qtdNotas", Query.Direction.DESCENDING)
+                .orderBy("nomeProjeto")
+                .startAt(nomeProjeto)
+                .endAt(nomeProjeto + "\uf8ff")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -135,23 +132,8 @@ public class ListaComprovanteActivity extends AppCompatActivity {
 
 
                         }
+
                     }
                 });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        if (funcionario != null && txNomeFuncionario != null) {
-            Intent i = new Intent(ListaComprovanteActivity.this, DadosFuncionarioActivity.class);
-            i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
-            i.putExtra("funcionarioList", funcionario);
-            startActivity(i);
-        }else{
-            Intent i = new Intent(ListaComprovanteActivity.this, DadosFuncionarioActivity.class);
-            i.putExtra("funcionarioList", funcionario);
-            startActivity(i);
-        }
-        return false;
-
     }
 }

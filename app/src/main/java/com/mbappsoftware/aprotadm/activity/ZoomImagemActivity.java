@@ -27,6 +27,7 @@ public class ZoomImagemActivity extends AppCompatActivity {
     private ImageView iVFoto;
     private Comprovante comprovante;
     private Usuario funcionario;
+    private String txNomeFuncionario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,9 @@ public class ZoomImagemActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if ((extras != null) && (getIntent().getExtras().containsKey("comprovanteList"))) {
+            if (getIntent().getExtras().containsKey("pesq_txNomeFunc")){
+                txNomeFuncionario = extras.getString("pesq_txNomeFunc");
+            }
 
             comprovante = (Comprovante) extras.getSerializable("comprovanteList");
             urlFoto = extras.getString("urlComprovanteZoom");
@@ -96,7 +100,13 @@ public class ZoomImagemActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (comprovante.getUrlImagem() != null) {
+        if (comprovante.getUrlImagem() != null && txNomeFuncionario != null) {
+            Intent i = new Intent(ZoomImagemActivity.this, ComprovanteActivity.class);
+            i.putExtra("comprovanteList", comprovante);
+            i.putExtra("funcionarioList", funcionario);
+            i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
+            startActivity(i);
+        }else{
             Intent i = new Intent(ZoomImagemActivity.this, ComprovanteActivity.class);
             i.putExtra("comprovanteList", comprovante);
             i.putExtra("funcionarioList", funcionario);

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -32,6 +33,7 @@ public class ListaProjetoActivity extends AppCompatActivity {
     private List<Projeto> projetoList = new ArrayList<>();
     private ListaProjetosAdapter adapter;
     private RecyclerView recyclerProjeto;
+    private String nomeProjeto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class ListaProjetoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_projeto);
 
         db = ConfiguracaoFirebase.getfirebaseFirestore();
+
 
         iniciaComponentes();
     }
@@ -48,6 +51,35 @@ public class ListaProjetoActivity extends AppCompatActivity {
         super.onStart();
         recProjetos();
 
+    }
+
+    private void recProjetoPesquisa() {
+
+        db.collection("comprovante")
+                .orderBy("nomeProjeto")
+                .startAt(nomeProjeto)
+                .endAt(nomeProjeto + "\uf8ff")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        projetoList.clear();
+                        if (!queryDocumentSnapshots.isEmpty()) {
+
+                            List<DocumentSnapshot> listaDocumento = queryDocumentSnapshots.getDocuments();
+
+                            for (DocumentSnapshot d : listaDocumento) {
+                                Projeto projetoRec = d.toObject(Projeto.class);
+
+                                projetoList.add(projetoRec);
+                            }
+                            //Collections.reverse(carroList);
+                            adapter.notifyDataSetChanged();
+
+                        }
+
+                    }
+                });
     }
 
     private void recProjetos() {

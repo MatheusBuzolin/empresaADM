@@ -57,6 +57,8 @@ public class ComprovanteActivity extends AppCompatActivity {
     private StorageReference storage;
     private String urlWeb;
     private int home;
+    private String txNomeFuncionario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,10 @@ public class ComprovanteActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if ((extras != null) && (getIntent().getExtras().containsKey("comprovanteList"))) {
+
+            if (getIntent().getExtras().containsKey("pesq_txNomeFunc")){
+                txNomeFuncionario = extras.getString("pesq_txNomeFunc");
+            }
 
             comprovante = (Comprovante) extras.getSerializable("comprovanteList");
             funcionario = (Usuario) extras.getSerializable("funcionarioList");
@@ -150,6 +156,9 @@ public class ComprovanteActivity extends AppCompatActivity {
             i.putExtra("urlComprovanteZoom", comprovante.getUrlImagem());
             i.putExtra("comprovanteList", comprovante);
             i.putExtra("funcionarioList", funcionario);
+            if (txNomeFuncionario != null){
+                i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
+            }
             startActivity(i);
         }
     }
@@ -193,7 +202,12 @@ public class ComprovanteActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         if (funcionario != null && home == 1) {
             startActivity(new Intent(this, HomeActivity.class));
-        }else if(funcionario != null){
+        }else if(funcionario != null && txNomeFuncionario != null){
+            Intent i = new Intent(ComprovanteActivity.this, ListaComprovanteActivity.class);
+            i.putExtra("funcionarioList", funcionario);
+            i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
+            startActivity(i);
+        }else{
             Intent i = new Intent(ComprovanteActivity.this, ListaComprovanteActivity.class);
             i.putExtra("funcionarioList", funcionario);
             startActivity(i);
