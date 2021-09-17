@@ -18,16 +18,17 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.mbappsoftware.aprotadm.R;
+import com.mbappsoftware.aprotadm.helper.Constant;
 import com.mbappsoftware.aprotadm.model.Comprovante;
 import com.mbappsoftware.aprotadm.model.Usuario;
 
 public class ZoomImagemActivity extends AppCompatActivity {
 
-    private String strFotoMotoristaAprova, strFotoMotoristaInfo, urlFoto;
     private ImageView iVFoto;
-    private Comprovante comprovante;
     private Usuario funcionario;
-    private String txNomeFuncionario;
+    private Comprovante comprovante;
+    private String txNomeFuncionario, nomeProjeto, txData;
+    private int numTela;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +43,33 @@ public class ZoomImagemActivity extends AppCompatActivity {
         iVFoto = findViewById(R.id.pv_image);
 
         Bundle extras = getIntent().getExtras();
-        if ((extras != null) && (getIntent().getExtras().containsKey("comprovanteList"))) {
-            if (getIntent().getExtras().containsKey("pesq_txNomeFunc")){
-                txNomeFuncionario = extras.getString("pesq_txNomeFunc");
+        if ((extras != null) && (getIntent().getExtras().containsKey("numTela"))) {
+            numTela = extras.getInt("numTela");
+
+            if (numTela == Constant.NUM_OPS_1){
+                txNomeFuncionario = extras.getString("pesq_txNomeProjetoNome");
+                nomeProjeto = extras.getString("pesq_txNomeProjetoProjeto");
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+
+            }else if (numTela == Constant.NUM_OPS_2 || numTela == Constant.NUM_OPS_3){
+                funcionario = (Usuario) extras.getSerializable("funcionario");
+                txNomeFuncionario = extras.getString("pesq_txNomeProjetoNome");
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+
+            }else if (numTela == Constant.NUM_OPS_4){
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+
+            }else if (numTela == Constant.NUM_OPS_5){
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+                txNomeFuncionario = extras.getString("pesq_txNomeProjetoNome");
+                nomeProjeto = extras.getString("pesq_txNomeProjetoProjeto");
+                txData = extras.getString("pesq_txNomeProjetoData");
+
             }
 
-            comprovante = (Comprovante) extras.getSerializable("comprovanteList");
-            urlFoto = extras.getString("urlComprovanteZoom");
-            funcionario = (Usuario) extras.getSerializable("funcionarioList");
-            carregarFotoString(urlFoto);
+            carregarFotoString(comprovante.getUrlImagem());
 
-            Log.i("funcks", "FUNCIONARIO > " + comprovante.getDiaDaNota());
+            //Log.i("funcks", "ZoomImagemActivity - FUNCIONARIO > " + numReceb);
         }
     }
 
@@ -100,18 +117,40 @@ public class ZoomImagemActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (comprovante.getUrlImagem() != null && txNomeFuncionario != null) {
+        if (numTela == Constant.NUM_OPS_1){
             Intent i = new Intent(ZoomImagemActivity.this, ComprovanteActivity.class);
-            i.putExtra("comprovanteList", comprovante);
-            i.putExtra("funcionarioList", funcionario);
-            i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("pesq_txNomeProjetoProjeto", nomeProjeto);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("numTela", numTela);
             startActivity(i);
-        }else{
+
+        }else if (numTela == Constant.NUM_OPS_2 || numTela == Constant.NUM_OPS_3){
             Intent i = new Intent(ZoomImagemActivity.this, ComprovanteActivity.class);
-            i.putExtra("comprovanteList", comprovante);
-            i.putExtra("funcionarioList", funcionario);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("funcionario", funcionario);
+            i.putExtra("numTela", numTela);
             startActivity(i);
+
+        }else if (numTela == Constant.NUM_OPS_4){
+            Intent i = new Intent(ZoomImagemActivity.this, ComprovanteActivity.class);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("numTela", numTela);
+            startActivity(i);
+
+        }else if (numTela == Constant.NUM_OPS_5){
+            Intent i = new Intent(ZoomImagemActivity.this, ComprovanteActivity.class);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("pesq_txNomeProjetoProjeto", nomeProjeto);
+            i.putExtra("pesq_txNomeProjetoData", txData);
+            i.putExtra("numTela", numTela);
+            startActivity(i);
+
         }
+
+
         return false;
 
     }

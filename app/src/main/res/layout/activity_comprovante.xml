@@ -28,6 +28,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -91,8 +92,8 @@
         android:textSize="20sp"
         android:textAlignment="textStart"
         android:layout_marginTop="1dp"
-        android:paddingStart="10dp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:paddingStart="10dp"/>
 
     <TextView
         android:id="@+id/compro_tv_dia"
@@ -117,6 +118,28 @@
 
     <TextView
         android:id="@+id/compro_tv_valor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:text="--"
+        android:textAlignment="textStart"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp" />
+
+    <include layout="@layout/c_divisor_dois" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="STATUS"
+        android:textSize="20sp"
+        android:textAlignment="textStart"
+        android:layout_marginTop="1dp"
+        android:paddingStart="10dp"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/compro_tv_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
@@ -150,7 +173,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="STATUS"
+        android:text="OBSERVAÇÃO"
         android:textSize="20sp"
         android:textAlignment="textStart"
         android:layout_marginTop="1dp"
@@ -158,26 +181,13 @@
         android:textColor="@android:color/black"/>
 
     <TextView
-        android:id="@+id/compro_tv_status"
+        android:id="@+id/compro_tv_observacao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
-        android:text="PAGO"
+        android:text="--"
         android:textAlignment="textStart"
         android:textSize="15sp" />
-
-
-    <Button
-        android:id="@+id/add_bt_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTintMode="multiply"
-        android:layout_gravity="center"
-        android:onClick="baixarImagem"
-        android:theme="@style/botaoPadrao"
-        android:textSize="18sp"
-        android:visibility="gone"
-        android:text="baixar imagem"/>
 
     <Button
         android:id="@+id/add_bt_status"

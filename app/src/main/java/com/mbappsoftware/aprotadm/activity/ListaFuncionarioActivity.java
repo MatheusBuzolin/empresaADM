@@ -22,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.mbappsoftware.aprotadm.R;
 import com.mbappsoftware.aprotadm.adapter.ListaFunciAdapter;
 import com.mbappsoftware.aprotadm.config.ConfiguracaoFirebase;
+import com.mbappsoftware.aprotadm.helper.Constant;
 import com.mbappsoftware.aprotadm.helper.RecyclerItemClickListener;
 import com.mbappsoftware.aprotadm.model.Usuario;
 
@@ -34,7 +35,8 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
     private List<Usuario> funcionarioList = new ArrayList<>();
     private ListaFunciAdapter adapter;
     private RecyclerView recyclerFuncionario;
-    private String nomeFuncionario;
+    private String nomeFuncionarioPesquisa;
+    private int numTela;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +46,13 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
         db = ConfiguracaoFirebase.getfirebaseFirestore();
 
         Bundle extras = getIntent().getExtras();
-        if ((extras != null) && (getIntent().getExtras().containsKey("pesq_txNomeFunc"))) {
+        if ((extras != null) && (getIntent().getExtras().containsKey("numTela"))) {
+            numTela = extras.getInt("numTela");
 
-            //funcionario = (Usuario) extras.getSerializable("funcionarioList");
-            nomeFuncionario = extras.getString("pesq_txNomeFunc");
-            Log.i("sdfdsfd", "HOME 1  ListaFuncionarioActivity > " + nomeFuncionario );
+            if (numTela == Constant.NUM_OPS_2){
+                nomeFuncionarioPesquisa = extras.getString("pesq_txNomeProjetoNome");
+            }
+            Log.i("sdfdsfd", "HOME 1  ListaFuncionarioActivity > " + nomeFuncionarioPesquisa );
         }
 
         iniciaComponentes();
@@ -59,9 +63,10 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (nomeFuncionario != null){
+        if (numTela == Constant.NUM_OPS_2){
             recFuncionarioPesquisa();
         }else {
+            numTela = Constant.NUM_OPS_3;
             recFuncionarios();
         }
 
@@ -71,8 +76,8 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
 
         db.collection("funcionario")
                 .orderBy("nomePesquisa")
-                .startAt(nomeFuncionario)
-                .endAt(nomeFuncionario + "\uf8ff")
+                .startAt(nomeFuncionarioPesquisa)
+                .endAt(nomeFuncionarioPesquisa + "\uf8ff")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -125,10 +130,9 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (nomeFuncionario != null) {
+        if (numTela == Constant.NUM_OPS_2){
             startActivity(new Intent(ListaFuncionarioActivity.this, PesquisaActivity.class));
-
-        }else{
+        }else if(numTela == Constant.NUM_OPS_3){
             startActivity(new Intent(ListaFuncionarioActivity.this, HomeActivity.class));
         }
         return false;
@@ -160,10 +164,12 @@ public class ListaFuncionarioActivity extends AppCompatActivity {
                         Usuario funcionario = funcionarioList.get(position);
 
                         Intent i = new Intent(ListaFuncionarioActivity.this, DadosFuncionarioActivity.class);
-                        i.putExtra("funcionarioList", funcionario);
-                        if (nomeFuncionario != null) {
-                            i.putExtra("pesq_txNomeFunc", nomeFuncionario);
+                        i.putExtra("funcionario", funcionario);
+                        if (numTela == Constant.NUM_OPS_2){
+                            i.putExtra("pesq_txNomeProjetoNome", funcionario.getNomePesquisa());
+
                         }
+                        i.putExtra("numTela", numTela);
                         startActivity(i);
                     }
 

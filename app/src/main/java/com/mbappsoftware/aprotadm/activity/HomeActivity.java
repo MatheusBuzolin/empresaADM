@@ -39,6 +39,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.mbappsoftware.aprotadm.R;
 import com.mbappsoftware.aprotadm.adapter.ListaComprovanteAdapter;
 import com.mbappsoftware.aprotadm.config.ConfiguracaoFirebase;
+import com.mbappsoftware.aprotadm.helper.Constant;
 import com.mbappsoftware.aprotadm.helper.Permissoes;
 import com.mbappsoftware.aprotadm.helper.RecyclerItemClickListener;
 import com.mbappsoftware.aprotadm.helper.UsuarioFirebase;
@@ -278,16 +279,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
                                     DocumentSnapshot document = task.getResult();
-                                    int home = 1;
+                                    int numTela = Constant.NUM_OPS_4;
                                     //Toast.makeText(SplashActivity.this, "IF 1", Toast.LENGTH_SHORT).show();
 
                                     if (document.exists()) {
                                         usuario = document.toObject(Usuario.class);
 
                                         Intent i = new Intent(HomeActivity.this, ComprovanteActivity.class);
-                                        i.putExtra("comprovanteList", comprovante);
-                                        i.putExtra("funcionarioList", usuario);
-                                        i.putExtra("home", home);
+                                        i.putExtra("comprovante", comprovante);
+                                        //i.putExtra("funcionarioList", usuario);
+                                        i.putExtra("numTela", numTela);
                                         startActivity(i);
 
                                     }

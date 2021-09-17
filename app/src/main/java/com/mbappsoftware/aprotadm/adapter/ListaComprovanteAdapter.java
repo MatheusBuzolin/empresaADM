@@ -3,6 +3,7 @@ package com.mbappsoftware.aprotadm.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mbappsoftware.aprotadm.R;
 import com.mbappsoftware.aprotadm.model.Comprovante;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ListaComprovanteAdapter extends RecyclerView.Adapter<ListaComprovanteAdapter.MyViewHolder>{
@@ -27,7 +29,7 @@ public class ListaComprovanteAdapter extends RecyclerView.Adapter<ListaComprovan
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_lista_comprovante, parent, false);
+        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_lista_prol_compro, parent, false);
         return new MyViewHolder(itemLista);
     }
 
@@ -35,8 +37,20 @@ public class ListaComprovanteAdapter extends RecyclerView.Adapter<ListaComprovan
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         Comprovante comprovante = comprovanteList.get(position);
-        holder.dia.setText(comprovante.getDiaDaNota());
-        holder.nome.setText(comprovante.getNomeFuncionario().toUpperCase());
+
+        DecimalFormat decimal = new DecimalFormat("0.00");
+        String txtValor = decimal.format(comprovante.getValorNota()).replace(",", ".");
+
+        holder.data.setText(comprovante.getDiaDaNota());
+        holder.nome.setText(comprovante.getNomeFuncionario());
+        holder.valor.setText("R$ " + txtValor);
+        holder.despesa.setText(comprovante.getTipoComprovante());
+
+        if (comprovante.getStatus().equals(Comprovante.STATUS_ANALISE)){
+            holder.linearLayout.setBackgroundResource(R.color.vermelho);
+        }else{
+            holder.linearLayout.setBackgroundResource(R.color.verde);
+        }
     }
 
     /*@Override
@@ -57,13 +71,17 @@ public class ListaComprovanteAdapter extends RecyclerView.Adapter<ListaComprovan
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView dia, nome;
+        TextView data, nome, valor, despesa;
+        LinearLayout linearLayout;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            dia = itemView.findViewById(R.id.adRequi_tv_dia);
+            data = itemView.findViewById(R.id.adRequi_tv_data);
             nome = itemView.findViewById(R.id.adRequi_tv_nome);
+            valor = itemView.findViewById(R.id.adRequi_tv_valor);
+            despesa = itemView.findViewById(R.id.adRequi_tv_despesa);
+            linearLayout = itemView.findViewById(R.id.lista_comrpo_linear);
         }
     }
 }

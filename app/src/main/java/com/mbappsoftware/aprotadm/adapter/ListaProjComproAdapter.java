@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mbappsoftware.aprotadm.R;
 import com.mbappsoftware.aprotadm.model.Comprovante;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ListaProjComproAdapter extends RecyclerView.Adapter<ListaProjComproAdapter.MyViewHolder>{
@@ -33,11 +34,14 @@ public class ListaProjComproAdapter extends RecyclerView.Adapter<ListaProjCompro
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
         Comprovante comprovante = comprovanteList.get(position);
+
+        DecimalFormat decimal = new DecimalFormat("0.00");
+        String txtValor = decimal.format(comprovante.getValorNota()).replace(",", ".");
+
         holder.data.setText(comprovante.getDiaDaNota());
-        holder.nome.setText(comprovante.getNomeFuncionario().toUpperCase());
-        holder.valor.setText("R$ " + comprovante.getValorNota());
+        holder.nome.setText(comprovante.getNomeFuncionario());
+        holder.valor.setText("R$ " + txtValor);
         holder.despesa.setText(comprovante.getTipoComprovante());
 
         if (comprovante.getStatus().equals(Comprovante.STATUS_ANALISE)){

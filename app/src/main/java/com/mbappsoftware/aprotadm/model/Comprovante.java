@@ -23,6 +23,7 @@ public class Comprovante implements Serializable {
     private String status;
     private String urlImagem;
     private String tipoComprovante;
+    private String observacao;
     private int qtdNotas;
 
     public static final String STATUS_ANALISE = "ANALISANDO";
@@ -86,6 +87,14 @@ public class Comprovante implements Serializable {
 
                     }
                 });
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
     }
 
     public String getTipoComprovante() {

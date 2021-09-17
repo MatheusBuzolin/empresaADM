@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,6 +35,7 @@ public class ListaProjComproActivity extends AppCompatActivity {
     private ListaProjComproAdapter adapter;
     private RecyclerView recyclerComprovante;
     private String nomeProjeto;
+    private int numInt = 2;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,11 @@ public class ListaProjComproActivity extends AppCompatActivity {
         if ((extras != null) && (getIntent().getExtras().containsKey("pesq_txNomeProjeto"))) {
 
             //funcionario = (Usuario) extras.getSerializable("funcionarioList");
+            nomeProjeto = extras.getString("pesq_txNomeProjeto");
+
+            if (getIntent().getExtras().containsKey("listaProjComproNum")){
+                numInt = extras.getInt("listaProjComproNum");
+            }
             nomeProjeto = extras.getString("pesq_txNomeProjeto");
             Log.i("sdfdsfd", "HOME 1  ListaFuncionarioActivity > " + nomeProjeto );
         }
@@ -84,13 +91,11 @@ public class ListaProjComproActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         Comprovante comprovante = comprovanteList.get(position);
 
-                        /*Intent i = new Intent(ListaComprovanteActivity.this, ComprovanteActivity.class);
-                        if (txNomeFuncionario != null){
-                            i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
-                        }
+                        Intent i = new Intent(ListaProjComproActivity.this, ComprovanteActivity.class);
                         i.putExtra("comprovanteList", comprovante);
-                        i.putExtra("funcionarioList", funcionario);
-                        startActivity(i);*/
+                        i.putExtra("pesq_txNomeProjeto", nomeProjeto);
+                        i.putExtra("listaProjComproNum" , numInt);
+                        startActivity(i);
                     }
 
                     @Override
@@ -110,6 +115,7 @@ public class ListaProjComproActivity extends AppCompatActivity {
 
         db.collection("comprovante")
                 .orderBy("nomeProjeto")
+                //.orderBy("nomeFuncionario")
                 .startAt(nomeProjeto)
                 .endAt(nomeProjeto + "\uf8ff")
                 .get()

@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.mbappsoftware.aprotadm.R;
 import com.mbappsoftware.aprotadm.config.ConfiguracaoFirebase;
+import com.mbappsoftware.aprotadm.helper.Constant;
 import com.mbappsoftware.aprotadm.model.Comprovante;
 import com.mbappsoftware.aprotadm.model.Usuario;
 
@@ -42,6 +43,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -49,15 +51,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ComprovanteActivity extends AppCompatActivity {
 
-    private Comprovante comprovante;
     private Usuario funcionario;
+    private Comprovante comprovante;
     private CircleImageView imagem;
-    private TextView idProjeto, dia, valor, status, despesa;
+    private TextView idProjeto, dia, valor, status, despesa, observacao;
     private ProgressBar progressBarMotorista;
     private StorageReference storage;
     private String urlWeb;
-    private int home;
-    private String txNomeFuncionario;
+    private int numTela;
+    private String txNomeFuncionario, nomeProjeto, txData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,51 +69,48 @@ public class ComprovanteActivity extends AppCompatActivity {
         storage = ConfiguracaoFirebase.getFirebaseStorage();
 
         Bundle extras = getIntent().getExtras();
-        if ((extras != null) && (getIntent().getExtras().containsKey("comprovanteList"))) {
+        if ((extras != null) && (getIntent().getExtras().containsKey("numTela"))) {
+            numTela = extras.getInt("numTela");
 
-            if (getIntent().getExtras().containsKey("pesq_txNomeFunc")){
-                txNomeFuncionario = extras.getString("pesq_txNomeFunc");
+            if (numTela == Constant.NUM_OPS_1){
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+                txNomeFuncionario = extras.getString("pesq_txNomeProjetoNome");
+                nomeProjeto = extras.getString("pesq_txNomeProjetoProjeto");
+
+            }else if (numTela == Constant.NUM_OPS_2 || numTela == Constant.NUM_OPS_3){
+                funcionario = (Usuario) extras.getSerializable("funcionario");
+                txNomeFuncionario = extras.getString("pesq_txNomeProjetoNome");
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+
+            }else if (numTela == Constant.NUM_OPS_4){
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+
+            }else if (numTela == Constant.NUM_OPS_5){
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+                txNomeFuncionario = extras.getString("pesq_txNomeProjetoNome");
+                nomeProjeto = extras.getString("pesq_txNomeProjetoProjeto");
+                txData = extras.getString("pesq_txNomeProjetoData");
+
             }
 
-            comprovante = (Comprovante) extras.getSerializable("comprovanteList");
-            funcionario = (Usuario) extras.getSerializable("funcionarioList");
-            home = extras.getInt("home");
 
-            Log.i("funcks", "FUNCIONARIO > " + comprovante.getDiaDaNota());
+            Log.i("funcks", "ComprovanteActivity - FUNCIONARIO > " + comprovante.getDiaDaNota());
+
+            StorageReference ref = storage.child("funcionario")
+                    .child("comprovante")
+                    .child(comprovante.getUidComprovante() + ".jpeg" );
+
+            ref.getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Log.i("dccdc", "URL 1-> " + uri.toString());
+                            urlWeb = String.valueOf(uri);
+                        }
+                    });
         }
 
-
-        StorageReference ref = storage.child("funcionario")
-                .child("comprovante")
-                .child(comprovante.getUidComprovante() + ".jpeg" );
-
-        ref.getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.i("dccdc", "URL 1-> " + uri.toString());
-                        urlWeb = String.valueOf(uri);
-                    }
-                });
-
         iniciaComponentes();
-    }
-
-    private void iniciaComponentes() {
-
-        //configurando toobar
-        Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
-        toolbar.setTitle("Comprovante");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        imagem = findViewById(R.id.compro_fotoMotorista);
-        idProjeto = findViewById(R.id.compro_tv_idComprovante);
-        valor = findViewById(R.id.compro_tv_valor);
-        dia = findViewById(R.id.compro_tv_dia);
-        status = findViewById(R.id.compro_tv_status);
-        progressBarMotorista = findViewById(R.id.progressBar_fotoComprovante);
-        despesa = findViewById(R.id.compro_tv_despesa);
     }
 
     @Override
@@ -123,14 +122,19 @@ public class ComprovanteActivity extends AppCompatActivity {
     }
 
     private void carregaFoto() {
-
-        String strValorNota = String.valueOf(comprovante.getValorNota());
+        DecimalFormat decimal = new DecimalFormat("0.00");
+        String txtValor = decimal.format(comprovante.getValorNota()).replace(",", ".");
 
         idProjeto.setText(comprovante.getNomeProjeto());
-        valor.setText(strValorNota);
+        valor.setText("R$ " + txtValor);
         dia.setText(comprovante.getDiaDaNota());
         status.setText(comprovante.getStatus());
         despesa.setText(comprovante.getTipoComprovante());
+        if (comprovante.getObservacao() != null){
+            observacao.setText(comprovante.getObservacao());
+        }else{
+            observacao.setText("--");
+        }
 
         Glide.with(ComprovanteActivity.this).asBitmap().load(comprovante.getUrlImagem()).listener(new RequestListener<Bitmap>() {
             @Override
@@ -151,15 +155,37 @@ public class ComprovanteActivity extends AppCompatActivity {
 
     public void abrirFotoMotoristaGrande(View view) {
 
-        if (comprovante.getUrlImagem() != null) {
+        if (numTela == Constant.NUM_OPS_1){
             Intent i = new Intent(ComprovanteActivity.this, ZoomImagemActivity.class);
-            i.putExtra("urlComprovanteZoom", comprovante.getUrlImagem());
-            i.putExtra("comprovanteList", comprovante);
-            i.putExtra("funcionarioList", funcionario);
-            if (txNomeFuncionario != null){
-                i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
-            }
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("pesq_txNomeProjetoProjeto", nomeProjeto);
+            i.putExtra("numTela", numTela);
             startActivity(i);
+
+        }else if(numTela == Constant.NUM_OPS_2 || numTela == Constant.NUM_OPS_3){
+            Intent i = new Intent(ComprovanteActivity.this, ZoomImagemActivity.class);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("numTela", numTela);
+            i.putExtra("funcionario", funcionario);
+            startActivity(i);
+
+        }else if (numTela == Constant.NUM_OPS_4){
+            Intent i = new Intent(ComprovanteActivity.this, ZoomImagemActivity.class);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("numTela", numTela);
+            startActivity(i);
+
+        }else if (numTela == Constant.NUM_OPS_5){
+            Intent i = new Intent(ComprovanteActivity.this, ZoomImagemActivity.class);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("pesq_txNomeProjetoProjeto", nomeProjeto);
+            i.putExtra("pesq_txNomeProjetoData", txData);
+            i.putExtra("numTela", numTela);
+            startActivity(i);
+
         }
     }
 
@@ -200,20 +226,51 @@ public class ComprovanteActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (funcionario != null && home == 1) {
-            startActivity(new Intent(this, HomeActivity.class));
-        }else if(funcionario != null && txNomeFuncionario != null){
-            Intent i = new Intent(ComprovanteActivity.this, ListaComprovanteActivity.class);
-            i.putExtra("funcionarioList", funcionario);
-            i.putExtra("pesq_txNomeFunc", txNomeFuncionario);
+        if (numTela == Constant.NUM_OPS_1){
+            Intent i = new Intent(ComprovanteActivity.this, ListaNomeProjetoActivity.class);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("pesq_txNomeProjetoProjeto", nomeProjeto);
+            i.putExtra("numTela", numTela);
             startActivity(i);
-        }else{
+        }else if(numTela == Constant.NUM_OPS_2 || numTela == Constant.NUM_OPS_3){
             Intent i = new Intent(ComprovanteActivity.this, ListaComprovanteActivity.class);
-            i.putExtra("funcionarioList", funcionario);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("funcionario", funcionario);
+            i.putExtra("numTela", numTela);
+            startActivity(i);
+        }else if (numTela == Constant.NUM_OPS_4){
+            startActivity(new Intent(ComprovanteActivity.this, HomeActivity.class));
+
+        }else if (numTela == Constant.NUM_OPS_5){
+            Intent i = new Intent(ComprovanteActivity.this, ListaNomeProjetoActivity.class);
+            i.putExtra("pesq_txNomeProjetoNome", txNomeFuncionario);
+            i.putExtra("pesq_txNomeProjetoProjeto", nomeProjeto);
+            i.putExtra("pesq_txNomeProjetoData", txData);
+            i.putExtra("numTela", numTela);
             startActivity(i);
         }
+
+
         return false;
 
+    }
+
+    private void iniciaComponentes() {
+
+        //configurando toobar
+        Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
+        toolbar.setTitle("Comprovante");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        imagem = findViewById(R.id.compro_fotoMotorista);
+        idProjeto = findViewById(R.id.compro_tv_idComprovante);
+        valor = findViewById(R.id.compro_tv_valor);
+        dia = findViewById(R.id.compro_tv_dia);
+        status = findViewById(R.id.compro_tv_status);
+        progressBarMotorista = findViewById(R.id.progressBar_fotoComprovante);
+        despesa = findViewById(R.id.compro_tv_despesa);
+        observacao = findViewById(R.id.compro_tv_observacao);
     }
 
     class DownloadTask extends AsyncTask<String, Integer, String>{
@@ -256,7 +313,7 @@ public class ComprovanteActivity extends AppCompatActivity {
                     file.mkdir();
                 }
 
-                File input_file = new File(file, imageFileName + funcionario.getNomePesquisa() + ".jpg");
+                File input_file = new File(file, imageFileName + comprovante.getNomeFuncionario() + ".jpg");
                 InputStream inputStream = new BufferedInputStream(url.openStream(), 8192);
                 byte[] data = new byte[1024];
                 int total = 0;

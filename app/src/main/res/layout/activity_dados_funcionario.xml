@@ -45,4 +45,14 @@
         android:textSize="18sp"
         android:text="ver comprovante"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:gravity="start"
+        android:layout_height="wrap_content"
+        android:text="OBS\n*PODE SER COLOCADO A QUANTIDADE DE COMPROVANTES\n*QUANTIDADE DE COMPROVANTE DE UM CENTRO DE CUSTO\n*VALOR TOTAL GASTO PELO FUNCIONARIO POR CENTRO DE CUSTO\n*VALOR TOTAL SOMANDO TODOS OS CENTROS DE CUSTOS"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:paddingStart="10dp"
+        android:textStyle="bold" />
+
 </LinearLayout>

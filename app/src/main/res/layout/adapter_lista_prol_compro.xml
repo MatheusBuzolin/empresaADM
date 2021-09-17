@@ -4,19 +4,17 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:gravity="center"
-    android:layout_marginBottom="2dp">
+    android:gravity="center">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/dd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="5dp"
         android:layout_marginEnd="30dp"
         android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="3dp"
-        app:cardElevation="5dp"
+        app:cardElevation="3dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,6 +50,11 @@
                 android:textColor="@android:color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/brancoMesclado" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -15,7 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ListaProjComproActivity"></activity>
+        <activity android:name=".activity.DeletarFuncionarioActivity"></activity>
+        <activity
+            android:name=".activity.ListaNomeProjetoActivity"
+            android:parentActivityName=".activity.PesquisaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ListaProjComproActivity"
+            android:parentActivityName=".activity.PesquisaActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PesquisaActivity"
             android:parentActivityName=".activity.HomeActivity"
