@@ -13,10 +13,12 @@ import com.github.rtoshiro.util.format.text.MaskTextWatcher;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mbappsoftware.aprotadm.R;
 import com.mbappsoftware.aprotadm.helper.Constant;
+import com.santalu.maskedittext.MaskEditText;
 
 public class PesquisaActivity extends AppCompatActivity {
 
-    private TextInputEditText nomeFuncionario, nomeProjeto, data;
+    private MaskEditText data;
+    private TextInputEditText nomeFuncionario, nomeProjeto;
     private int numTela;
 
 
@@ -40,6 +42,9 @@ public class PesquisaActivity extends AppCompatActivity {
 
             }else if(!txNomeProjeto.isEmpty()){//RECUPERA LISTA DE -> NOME + PROJETO
                 recNomeProjeto(txNomeFunc, txNomeProjeto);
+
+            }else if (!txData.isEmpty()){
+                recNomeFunData(txNomeFunc, txData);
 
             }else{//RECUPERA SO LISTA DE -> NOME
                 recNome(txNomeFunc);
@@ -85,6 +90,19 @@ public class PesquisaActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    private void recProjetoData(String txNomeProjeto, String txData) {
+        /*Intent i = new Intent(PesquisaActivity.this, ListaFuncionarioActivity.class);
+        numTela = Constant.NUM_OPS_6;
+        i.putExtra("pesq_txNomeFunc", txNomeFunc);
+        i.putExtra("numTela", numTela);
+        startActivity(i);**/
+    }
+
+    private void recNomeFunData(String txNomeFunc, String txData) {
+
+
+    }
+
     private void recNome(String txNomeFunc) {
         Intent i = new Intent(PesquisaActivity.this, ListaFuncionarioActivity.class);
         numTela = Constant.NUM_OPS_2;
@@ -93,22 +111,17 @@ public class PesquisaActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    private void recProjetoData(String txNomeProjeto, String txData) {
-        /*Intent i = new Intent(PesquisaActivity.this, ListaFuncionarioActivity.class);
-        numTela = Constant.NUM_OPS_;
-        i.putExtra("pesq_txNomeFunc", txNomeFunc);
-        i.putExtra("numTela", numTela);
-        startActivity(i);*/
-    }
-
     private void recProjeto(String txNomeProjeto) {
-        /*Intent i = new Intent(PesquisaActivity.this, ListaProjComproActivity.class);
+        Intent i = new Intent(PesquisaActivity.this, ListaProjComproActivity.class);
+        numTela = Constant.NUM_OPS_6;
         i.putExtra("pesq_txNomeProjeto", txNomeProjeto);
         i.putExtra("numTela", numTela);
-        startActivity(i);*/
+        startActivity(i);
     }
 
     private void recData(String txData) {
+
+
     }
 
     private void iniciaComponentes() {
@@ -123,8 +136,5 @@ public class PesquisaActivity extends AppCompatActivity {
         nomeProjeto = findViewById(R.id.pesq_et_projeto);
         data = findViewById(R.id.pesq_et_dia);
 
-        SimpleMaskFormatter smfV = new SimpleMaskFormatter("NN/NN/NNNN");
-        MaskTextWatcher mtwV = new MaskTextWatcher(data, smfV);
-        data.addTextChangedListener(mtwV);
     }
 }

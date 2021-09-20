@@ -70,12 +70,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout1">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.santalu.maskedittext.MaskEditText
             android:id="@+id/pesq_et_dia"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Pesq. dia"
-            android:inputType="textPersonName|textAutoComplete" />
+            android:hint="Pesq. Dia"
+            android:inputType="numberDecimal"
+            app:met_mask="##/##/####" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

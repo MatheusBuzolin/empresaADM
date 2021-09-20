@@ -20,6 +20,11 @@ public class Comprovante implements Serializable {
     private String nomeFuncionario;
     private Double valorNota;
     private String diaDaNota;
+    private String diaNota;
+    private String mesNota;
+    private String anoDaNota;
+    private String semanaDoAnoNota;
+    private String semanaDoMesNota;
     private String status;
     private String urlImagem;
     private String tipoComprovante;
@@ -87,6 +92,46 @@ public class Comprovante implements Serializable {
 
                     }
                 });
+    }
+
+    public String getDiaNota() {
+        return diaNota;
+    }
+
+    public void setDiaNota(String diaNota) {
+        this.diaNota = diaNota;
+    }
+
+    public String getMesNota() {
+        return mesNota;
+    }
+
+    public void setMesNota(String mesNota) {
+        this.mesNota = mesNota;
+    }
+
+    public String getAnoDaNota() {
+        return anoDaNota;
+    }
+
+    public void setAnoDaNota(String anoDaNota) {
+        this.anoDaNota = anoDaNota;
+    }
+
+    public String getSemanaDoAnoNota() {
+        return semanaDoAnoNota;
+    }
+
+    public void setSemanaDoAnoNota(String semanaDoAnoNota) {
+        this.semanaDoAnoNota = semanaDoAnoNota;
+    }
+
+    public String getSemanaDoMesNota() {
+        return semanaDoMesNota;
+    }
+
+    public void setSemanaDoMesNota(String semanaDoMesNota) {
+        this.semanaDoMesNota = semanaDoMesNota;
     }
 
     public String getObservacao() {

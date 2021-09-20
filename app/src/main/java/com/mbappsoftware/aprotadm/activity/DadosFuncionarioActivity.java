@@ -1,13 +1,18 @@
 package com.mbappsoftware.aprotadm.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.mbappsoftware.aprotadm.R;
@@ -82,6 +87,29 @@ public class DadosFuncionarioActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_deleta, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_deletar:
+                deletarFuncionario();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deletarFuncionario() {
+
+        Toast.makeText(this, "DELETA FUNCIONARIO", Toast.LENGTH_LONG).show();
+    }
+
     private void inicializaComponentes() {
 
         Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
@@ -90,5 +118,11 @@ public class DadosFuncionarioActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nomeFuncionario = findViewById(R.id.dados_tv_nomeFunc);
+    }
+
+    public void gerarPlanilha(View view) {
+
+
+
     }
 }

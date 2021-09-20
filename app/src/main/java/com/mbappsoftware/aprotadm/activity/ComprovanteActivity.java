@@ -1,5 +1,6 @@
 package com.mbappsoftware.aprotadm.activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,6 +16,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -90,6 +94,10 @@ public class ComprovanteActivity extends AppCompatActivity {
                 txNomeFuncionario = extras.getString("pesq_txNomeProjetoNome");
                 nomeProjeto = extras.getString("pesq_txNomeProjetoProjeto");
                 txData = extras.getString("pesq_txNomeProjetoData");
+
+            }else if (numTela == Constant.NUM_OPS_6){
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+                nomeProjeto = extras.getString("pesq_txNomeProjeto");
 
             }
 
@@ -186,6 +194,13 @@ public class ComprovanteActivity extends AppCompatActivity {
             i.putExtra("numTela", numTela);
             startActivity(i);
 
+        }else if (numTela == Constant.NUM_OPS_6){
+            Intent i = new Intent(ComprovanteActivity.this, ZoomImagemActivity.class);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("pesq_txNomeProjeto", nomeProjeto);
+            i.putExtra("numTela", numTela);
+            startActivity(i);
+
         }
     }
 
@@ -224,6 +239,64 @@ public class ComprovanteActivity extends AppCompatActivity {
         }
     }
 
+    /*private void deletarProjeto() {
+
+        if (comprovante.getStatus().equals(Comprovante.STATUS_ANALISE)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("DESEJA DELETAR?")
+                    .setMessage("Após confirmar, o comprovante sera deletado!")
+                    .setCancelable(false)
+                    .setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            comprovante.removerFirestoreComprovante();
+                            Toast.makeText(ComprovanteActivity.this, "COMPROVANTE REMOVIDO!!", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(ComprovanteActivity.this, ListaComprovanteActivity.class);
+                            i.putExtra("nomeProjeto", texto);
+
+                            StorageReference imagem = storage
+                                    .child("funcionario")
+                                    .child("comprovante")
+                                    .child(comprovante.getUidComprovante() + ".jpeg" );
+                            imagem.delete();
+
+                            startActivity(i);
+
+                        }
+                    }).setNegativeButton("NÃO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }else{
+            Toast.makeText(ComprovanteActivity.this, "COMPROVANTE JÁ FOI ANALISADO!!", Toast.LENGTH_SHORT).show();
+        }
+
+    }*/
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_deleta, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_deletar:
+                Toast.makeText(this, "DELETA COMPROVANTE", Toast.LENGTH_LONG).show();
+                //deletarProjeto();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         if (numTela == Constant.NUM_OPS_1){
@@ -248,8 +321,13 @@ public class ComprovanteActivity extends AppCompatActivity {
             i.putExtra("pesq_txNomeProjetoData", txData);
             i.putExtra("numTela", numTela);
             startActivity(i);
-        }
 
+        }else if (numTela == Constant.NUM_OPS_6){
+            Intent i = new Intent(ComprovanteActivity.this, ListaProjComproActivity.class);
+            i.putExtra("pesq_txNomeProjeto", nomeProjeto);
+            i.putExtra("numTela", numTela);
+            startActivity(i);
+        }
 
         return false;
 

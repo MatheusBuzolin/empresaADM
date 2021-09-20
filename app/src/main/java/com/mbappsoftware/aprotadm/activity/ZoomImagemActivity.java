@@ -65,6 +65,10 @@ public class ZoomImagemActivity extends AppCompatActivity {
                 nomeProjeto = extras.getString("pesq_txNomeProjetoProjeto");
                 txData = extras.getString("pesq_txNomeProjetoData");
 
+            }else if (numTela == Constant.NUM_OPS_6){
+                comprovante = (Comprovante) extras.getSerializable("comprovante");
+                nomeProjeto = extras.getString("pesq_txNomeProjeto");
+
             }
 
             carregarFotoString(comprovante.getUrlImagem());
@@ -148,6 +152,12 @@ public class ZoomImagemActivity extends AppCompatActivity {
             i.putExtra("numTela", numTela);
             startActivity(i);
 
+        }else if (numTela == Constant.NUM_OPS_6){
+            Intent i = new Intent(ZoomImagemActivity.this, ComprovanteActivity.class);
+            i.putExtra("comprovante", comprovante);
+            i.putExtra("pesq_txNomeProjeto", nomeProjeto);
+            i.putExtra("numTela", numTela);
+            startActivity(i);
         }
 
 
