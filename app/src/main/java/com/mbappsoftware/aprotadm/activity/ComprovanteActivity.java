@@ -204,13 +204,6 @@ public class ComprovanteActivity extends AppCompatActivity {
         }
     }
 
-    public void baixarImagem(View view) {
-
-        DownloadTask downloadTask = new DownloadTask();
-        //downloadTask.execute(comprovante.getUrlImagem());
-        downloadTask.execute(urlWeb);
-    }
-
     public void mudaStatus(View view) {
 
         if (comprovante.getStatus().equals(Comprovante.STATUS_ANALISE)) {
@@ -351,6 +344,13 @@ public class ComprovanteActivity extends AppCompatActivity {
         observacao = findViewById(R.id.compro_tv_observacao);
     }
 
+    public void baixarImagem(View view) {
+
+        DownloadTask downloadTask = new DownloadTask();
+        //downloadTask.execute(comprovante.getUrlImagem());
+        downloadTask.execute(urlWeb);
+    }
+
     class DownloadTask extends AsyncTask<String, Integer, String>{
 
         ProgressDialog progressDialog;
@@ -377,7 +377,7 @@ public class ComprovanteActivity extends AppCompatActivity {
             //outro exemplo
             File pathF = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(pathF, "DemoPicture.jpg");
+            File file = new File(pathF, "APROTimagens");
 
             try {
                 URL url = new URL(path);

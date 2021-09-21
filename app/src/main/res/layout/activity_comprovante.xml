@@ -200,4 +200,15 @@
         android:textSize="18sp"
         android:text="ATUALIZA STATUS"/>
 
+    <Button
+        android:id="@+id/add_bt_statusSXDS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTintMode="multiply"
+        android:layout_gravity="center"
+        android:onClick="baixarImagem"
+        android:theme="@style/botaoPadrao"
+        android:textSize="18sp"
+        android:text="BAIXAR IMAGEM"/>
+
 </LinearLayout>

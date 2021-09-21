@@ -65,4 +65,14 @@
         android:textSize="18sp"
         android:text="gerar planilha"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTintMode="multiply"
+        android:layout_gravity="center"
+        android:onClick="modificaExcel"
+        android:theme="@style/botaoPadrao"
+        android:textSize="18sp"
+        android:text="gravar na planilha"/>
+
 </LinearLayout>
